@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+</head>
+
+<style>
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    background: #fac960;
+    color: white;
+    /*font-family: 'Source Code Pro','arial';*/
+    font-family: Roboto, sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+    text-align: center;
+    /*display: flex;*/
+    /*justify-content: flex-start;*/
+  }
+
+  .wrapper {
+    text-align: left;
+    height: 20px;
+  }
+
+  .button {
+    width: 30%
+    padding: 0px 10px;
+    margin: 0px;
+    background: #fac960;
+    color: white;
+    line-height: 30px;
+    font-size: 25px;
+    height: 70px;
+    border-style: solid;
+    -webkit-transition: background-color 300ms ease;
+    transition: background-color 300ms ease;
+  }
+
+  .translation {
+    padding: 0px 10px;
+    margin: 0px;
+    background: #fac960;
+    color: white;
+    line-height: 30px;
+    font-size: 15px;
+    height: 70px;
+    border-style: solid;
+  }
+
+  form {
+    /*width: auto;*/
+    padding: 10px 10px 10px 10px;
+
+  }
+  input {
+    text-indent: 10px;
+    width: 70%;
+    height: 70px;
+    /*padding: 0.7em;*/
+    line-height: 30px;
+    margin-bottom: 0.5em;
+    border: 0.1em solid #CCC;
+    border-radius: 0.2em;
+    color: #474747;
+    font-size: 25px;
+    font-weight: 300;
+    &:focus {
+      outline: 0.1em solid #7CCC14;
+      background: #EDFBDA;
+    }
+  }
+  .the-price {
+    font-size: 35px;
+  }
+  .up {
+    color: green;
+  }
+  .noChange {
+    color: grey;
+  }
+  .down {
+    color: red;
+  }
+</style>
+<body style="-webkit-app-region: drag">
+  <h3>Translate</h3>
+  <form style="-webkit-app-region: no-drag">
+    <input type="text" name="translate" value="word..." />
+    <button class="button" type="button">Translate</>
+  </form>
+
+  <!-- <div class="wrapper">
+  </div> -->
+  <script src="./window.js"></script>
+</body>
+</html>
