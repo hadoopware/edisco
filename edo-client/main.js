@@ -1,4 +1,5 @@
 const {app, BrowserWindow} = require('electron')
+const { globalShortcut } = require('electron')
 const path = require('path')
 const url = require('url')
 
@@ -6,7 +7,24 @@ const url = require('url')
 // be closed automatically when the JavaScript object is garbage collected.
 let win
 
-function createWindow () {
+// This method will be called when Electron has finished
+// initialization and is ready to create browser windows.
+// Some APIs can only be used after this event occurs.
+app.on('ready', () => {
+  var hotkey = 'CommandOrControl+Super+T';
+
+  // global hotkey
+  const ret = globalShortcut.register(hotkey, () => {
+    console.log(hotkey+' intercepted');
+    win.show();
+  })
+
+  if (!ret) {
+    console.log('registration failed')
+  }
+  // Check whether a shortcut is registered.
+  console.log(globalShortcut.isRegistered(hotkey))
+ 
   // Create the browser window.
   win = new BrowserWindow({width: 250, height: 130, frame: false})
 
@@ -18,29 +36,36 @@ function createWindow () {
   }))
 
   // Open the DevTools.
-  win.webContents.openDevTools()
+  //win.webContents.openDevTools()
 
-  // Emitted when the window is closed.
-  win.on('closed', () => {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    win = null
-  })
-}
+  // prevent closing, hide
+  win.on('close', (event) => {
+    event.preventDefault();
+    win.hide();
+  });
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
-app.on('ready', createWindow)
+});
 
-// Quit when all windows are closed.
-app.on('window-all-closed', () => {
+
+app.on('will-quit', () => {
+  // Unregister all shortcuts.
+  globalShortcut.unregisterAll()
+})
+
+function exit() {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
     app.quit()
   }
+}
+   
+
+// Quit when all windows are closed.
+app.on('window-all-closed', () => {
+  exit();
+  // prevent exiting
+  //event.preventDefault();
 })
 
 app.on('activate', () => {
