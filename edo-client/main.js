@@ -14,14 +14,24 @@ app.on('ready', () => {
   var hotkey = 'CommandOrControl+Super+T';
 
   // global hotkey
-  const ret = globalShortcut.register(hotkey, () => {
+  var ret = globalShortcut.register(hotkey, () => {
     console.log(hotkey+' intercepted');
     win.show();
   })
 
   if (!ret) {
-    console.log('registration failed')
+    console.log('Hotkey registration failed')
   }
+
+  var ret = globalShortcut.register('Escape', function(){
+    //console.log('Escape is pressed');
+    win.close();
+  });
+
+  if (!ret) {
+    console.log('Esc registration failed')
+  }
+ 
   // Check whether a shortcut is registered.
   console.log(globalShortcut.isRegistered(hotkey))
  
