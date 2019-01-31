@@ -1,40 +1,60 @@
     var request = require('request');
-    setInterval (function(){
-      request("http://finance.google.com/finance/info?client=ig&q=.DJI", function(error, response, body) {
-        body = body.slice(3);
-        body = JSON.parse(body);
-        console.log(body);
-        newPrice(body);
-      });
-    }, 1000);
-    var lastPrice;
-    function newPrice(arr) {
-      currentPrice = arr[0]["l"];
-      var history = document.getElementById("priceHistory");
-      if (lastPrice<currentPrice) {
-        var newElText = "▲ ";
-        var wrap = document.createElement("span");
-        wrap.className="up";
-      }
-      else if (lastPrice==currentPrice) {
-        var newElText = "▬ ";
-        var wrap = document.createElement("span");
-        wrap.className="noChange";
-      }
-      else {
-        var newElText = "▼ ";
-        var wrap = document.createElement("span");
-        wrap.className="down";
-      }
-      history.appendChild(wrap);
-      var textNode = document.createTextNode(newElText);
-      wrap.appendChild(textNode);
-      var nodeList = history.getElementsByTagName("SPAN").length;
-      if (nodeList==6) {
-        history.children[0].remove();
-      }
-      document.getElementById("price").innerHTML = currentPrice;
-      lastPrice=currentPrice;
-    }
+  
+    const serverUrl = "http://localhost:9000/v1/translate"
 
+    $(() => {
+      
+      $('#translateForm').bind('input propertychange', function() {
+        const text = this.value
+        $('#translated').text(text);
+      })
+    
+      $('#translateForm').focus() // focus input box
+
+      $("#translateForm").keydown(function(e){
+        // Enter was pressed without shift key
+        if (e.keyCode == 13 && !e.shiftKey)
+        {
+            const text = this.value
+            // prevent default behavior
+            e.preventDefault();
+
+            console.log('Tranlsating: '+text);
+
+            // (async () => {
+            //   const response = await fetch(serverUrl+'/'+text);
+            //   const j = await response.json(); //extract JSON from the http response
+            //   console.log('GET: '+j.translated);
+            // })();
+
+            (async () => {
+              var translateRequest = {
+                "text" : text
+              }
+              console.log('Fetching: POST('+ serverUrl +')'+': '+text)
+              const response = await fetch(serverUrl, {
+                method: 'POST',
+                body: JSON.stringify(translateRequest), // string or object
+                headers:{
+                  'Content-Type': 'application/json'
+                }
+              });
+              console.log('Fetching: POST('+ serverUrl +')'+': '+text+': r='+response.status);
+              switch (response.status) {
+                case 200: 
+                  const j = await response.json(); //extract JSON from the http response
+                  $('#translated').text(j.translated);
+                  break;
+                default:
+                  $('#translated').text("error: "+response.status+": "+response.statusText);
+              }
+              
+            })();
+
+            $('#translated').text("tranlsating...");
+        }
+      });
+    })
+
+    
 

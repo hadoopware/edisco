@@ -6,12 +6,12 @@
     "start": "electron .",
     "build": "electron-packager . edisco-client --platform=linux --arch=x64 --version=0.0.1 --overwrite"
   },
-
   "author": "Syspule",
   "license": "APL2",
-
   "dependencies": {
     "electron": "^3.0.4",
-    "electron-packager": "^9.1.0"
+    "electron-localshortcut": "^3.1.0",
+    "electron-packager": "^9.1.0",
+    "electron-reload": "^1.4.0"
   }
 }

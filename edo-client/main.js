@@ -1,7 +1,13 @@
 const {app, BrowserWindow} = require('electron')
 const { globalShortcut } = require('electron')
+const localShortcut = require('electron-localshortcut');
 const path = require('path')
 const url = require('url')
+
+const mainWindowW=1250;  //250
+const mainWindowH=530;  //130;
+
+require('electron-reload')(__dirname);
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -11,6 +17,8 @@ let win
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', () => {
+
+
   var hotkey = 'CommandOrControl+Super+T';
 
   // global hotkey
@@ -22,21 +30,12 @@ app.on('ready', () => {
   if (!ret) {
     console.log('Hotkey registration failed')
   }
-
-  var ret = globalShortcut.register('Escape', function(){
-    //console.log('Escape is pressed');
-    win.close();
-  });
-
-  if (!ret) {
-    console.log('Esc registration failed')
-  }
  
   // Check whether a shortcut is registered.
   console.log(globalShortcut.isRegistered(hotkey))
  
   // Create the browser window.
-  win = new BrowserWindow({width: 250, height: 130, frame: false})
+  win = new BrowserWindow({width: mainWindowW, height: mainWindowH, frame: false})
 
   // and load the index.html of the app.
   win.loadURL(url.format({
@@ -44,9 +43,10 @@ app.on('ready', () => {
     protocol: 'file:',
     slashes: true
   }))
+  //win.loadUrl(`file://${__dirname}/index.html`);
 
   // Open the DevTools.
-  //win.webContents.openDevTools()
+  win.webContents.openDevTools()
 
   // prevent closing, hide
   win.on('close', (event) => {
@@ -54,12 +54,19 @@ app.on('ready', () => {
     win.hide();
   });
 
+  localShortcut.register('Escape', function(){
+    //console.log('Escape is pressed');
+    // close window on Escape
+    win.close();
+  });
+
 });
 
 
 app.on('will-quit', () => {
   // Unregister all shortcuts.
-  globalShortcut.unregisterAll()
+  globalShortcut.unregisterAll();
+  localshortcut.unregisterAll(win);
 })
 
 function exit() {
